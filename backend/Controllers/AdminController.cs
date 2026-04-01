@@ -21,6 +21,7 @@ public class AdminController : ControllerBase
         return Ok(student);
     }
 
+
     [HttpPost("classes")]
     public IActionResult CreateClass(Class cls)
     {
@@ -28,7 +29,56 @@ public class AdminController : ControllerBase
         _context.SaveChanges();
         return Ok(cls);
     }
+    [HttpPost("assign-teacher-subject")]
+    public IActionResult AssignTeacherSubject(int teacherId, int classId, int subjectId)
+    {
+        // check if exists
+        var exists = _context.TeacherAssignments
+            .FirstOrDefault(x =>
+                x.TeacherId == teacherId &&
+                x.ClassId == classId &&
+                x.SubjectId == subjectId);
 
+        if (exists != null)
+            return BadRequest("Already assigned");
+
+        var assignment = new TeacherAssignment
+        {
+            TeacherId = teacherId,
+            ClassId = classId,
+            SubjectId = subjectId
+        };
+
+        _context.TeacherAssignments.Add(assignment);
+        _context.SaveChanges();
+
+        return Ok("Assigned successfully");
+    }
+
+    [HttpPost("create-teacher")]
+    public IActionResult CreateTeacher(string name, string password)
+    {
+        var user = new User
+        {
+            Name = name,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+            Role = "Teacher"
+        };
+
+        _context.Users.Add(user);
+        _context.SaveChanges();
+
+        var teacher = new Teacher
+        {
+            Name = name,
+            UserId = user.Id
+        };
+
+        _context.Teachers.Add(teacher);
+        _context.SaveChanges();
+
+        return Ok("Teacher created");
+    }
     [HttpPost("assign-teacher")]
     public IActionResult AssignTeacher(int classId, int teacherId)
     {
@@ -41,3 +91,4 @@ public class AdminController : ControllerBase
         return Ok();
     }
 }
+

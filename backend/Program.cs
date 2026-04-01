@@ -2,22 +2,31 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ ADD THIS (Database connection) with longer command timeout and retries
+// ✅ DATABASE
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         sqlOptions =>
         {
-            // Increase command timeout to 60 seconds (default is 30)
             sqlOptions.CommandTimeout(60);
-            // Optional: enable automatic retries for transient failures
             sqlOptions.EnableRetryOnFailure();
         }
     ));
 
-// Add services to the container.
-builder.Services.AddControllers();
+// ✅ ADD CORS (IMPORTANT)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReact",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // React URL
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
+// Services
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -30,9 +39,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// ✅ USE CORS (MUST BE BEFORE AUTH)
+app.UseCors("AllowReact");
+
 app.UseHttpsRedirection();
 
-// ⚠️ Keep this (we’ll upgrade to JWT later)
 app.UseAuthorization();
 
 app.MapControllers();
