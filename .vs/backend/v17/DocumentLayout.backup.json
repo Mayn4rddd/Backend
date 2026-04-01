@@ -78,7 +78,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -105,10 +105,6 @@
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 4,
               "Title": "Subject.cs",
@@ -118,8 +114,7 @@
               "RelativeToolTip": "backend\\Models\\Subject.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T07:53:05.067Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-01T07:53:05.067Z"
             },
             {
               "$type": "Document",
@@ -131,8 +126,7 @@
               "RelativeToolTip": "backend\\Models\\TeacherAssignment.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T07:45:05.455Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-01T07:45:05.455Z"
             },
             {
               "$type": "Document",
@@ -144,8 +138,7 @@
               "RelativeToolTip": "backend\\Controllers\\TeacherController.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAQwBgAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T06:46:18.68Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-01T06:46:18.68Z"
             },
             {
               "$type": "Document",
@@ -155,7 +148,7 @@
               "RelativeDocumentMoniker": "backend\\Controllers\\AdminController.cs",
               "ToolTip": "C:\\Users\\jimmy1\\source\\repos\\Backend\\backend\\Controllers\\AdminController.cs",
               "RelativeToolTip": "backend\\Controllers\\AdminController.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAIwDQAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAACAAAAAAAAAAAAAywCgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-27T13:46:54.212Z",
               "EditorCaption": ""
@@ -170,8 +163,7 @@
               "RelativeToolTip": "backend\\Program.cs",
               "ViewState": "AgIAABsAAAAAAAAAAAAAADIAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-27T13:50:54.265Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T13:50:54.265Z"
             },
             {
               "$type": "Document",
@@ -195,8 +187,7 @@
               "RelativeToolTip": "backend\\Data\\AppDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-27T13:46:17.143Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T13:46:17.143Z"
             },
             {
               "$type": "Document",
@@ -232,8 +223,7 @@
               "RelativeToolTip": "backend\\Models\\Teacher.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-27T13:44:07.713Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-27T13:44:07.713Z"
             },
             {
               "$type": "Document",
@@ -318,6 +308,10 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwAYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-27T13:43:46.321Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             }
           ]
         }
