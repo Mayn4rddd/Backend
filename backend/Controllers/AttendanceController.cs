@@ -14,7 +14,10 @@ public class AttendanceController : ControllerBase
     }
 
     [HttpPost("scan")]
-    public IActionResult Scan(Guid sessionId, string token, int studentId)
+    public IActionResult Scan(
+     [FromForm] Guid sessionId,
+     [FromForm] string token,
+     [FromForm] int studentId)
     {
         var session = _context.QrSessions
             .FirstOrDefault(s => s.SessionId == sessionId);
@@ -26,7 +29,7 @@ public class AttendanceController : ControllerBase
             return BadRequest("Invalid token");
 
         var exists = _context.Attendance.Any(a =>
-            a.StudentId == studentId && a.ClassId == session.ClassId);
+            a.StudentId == studentId && a.SectionId == session.SectionId);
 
         if (exists)
             return BadRequest("Already scanned");
@@ -34,7 +37,7 @@ public class AttendanceController : ControllerBase
         var attendance = new Attendance
         {
             StudentId = studentId,
-            ClassId = session.ClassId,
+            SectionId = session.SectionId,
             Timestamp = DateTime.Now,
             Status = "Present"
         };
@@ -42,6 +45,7 @@ public class AttendanceController : ControllerBase
         _context.Attendance.Add(attendance);
         _context.SaveChanges();
 
-        return Ok("Attendance recorded");
+        return Ok(new { message = "Attendance recorded" });
     }
 }
+

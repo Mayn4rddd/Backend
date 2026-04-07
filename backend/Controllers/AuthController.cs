@@ -12,31 +12,71 @@ public class AuthController : ControllerBase
         _context = context;
     }
 
-    // LOGIN
-    [HttpPost("login")]
-    public IActionResult Login(string name, string password)
+    // ✅ WEB LOGIN (React)
+    [HttpPost("web-login")]
+    public IActionResult WebLogin([FromBody] LoginRequest request)
     {
-        var user = _context.Users.FirstOrDefault(u => u.Name == name);
-        if (user == null) return Unauthorized();
+        if (request == null ||
+            string.IsNullOrEmpty(request.Name) ||
+            string.IsNullOrEmpty(request.Password))
+        {
+            return BadRequest("Name or password is empty");
+        }
 
-        if (string.IsNullOrWhiteSpace(user.PasswordHash))
-            return Unauthorized(new { message = "Invalid password setup" });
+        var user = _context.Users.FirstOrDefault(u => u.Name == request.Name);
 
-        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-            return Unauthorized();
+        if (user == null)
+            return Unauthorized(new { message = "User not found" });
+
+        if (user.Password != request.Password)
+            return Unauthorized(new { message = "Invalid password" });
+
+        // 🚫 BLOCK STUDENTS HERE
+        if (user.Role == "Student")
+        {
+            return Unauthorized(new
+            {
+                message = "Students cannot log in on web. Use the mobile app."
+            });
+        }
 
         return Ok(new
         {
-            message = "Login success",
-            role = user.Role
+            token = "sample-token",
+            role = user.Role,
+            name = user.Name,
+            userId = user.Id
         });
     }
-
-    // 🔥 METHOD 1: GENERATE HASH (FOR SSMS FIXING)
-    [HttpGet("generate-hash")]
-    public IActionResult GenerateHash(string password)
+    
+   
+    // ✅ MOBILE LOGIN (Flutter)
+    [HttpPost("mobile-login")]
+    public IActionResult MobileLogin([FromBody] LoginRequest request)
     {
-        var hash = BCrypt.Net.BCrypt.HashPassword(password);
-        return Ok(new { hash });
+        if (request == null ||
+            string.IsNullOrEmpty(request.Name) ||
+            string.IsNullOrEmpty(request.Password))
+        {
+            return BadRequest("Name or password is empty");
+        }
+
+        var user = _context.Users.FirstOrDefault(u => u.Name == request.Name);
+
+        if (user == null)
+            return Unauthorized(new { message = "User not found" });
+
+        if (user.Password != request.Password)
+            return Unauthorized(new { message = "Invalid password" });
+
+        // ✅ Students allowed here
+
+        return Ok(new
+        {
+            token = "sample-token",
+            role = user.Role,
+            name = user.Name,
+            userId = user.Id
+        });
     }
 }

@@ -14,17 +14,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Student"
+                "$ref": "#/components/schemas/CreateStudentDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Student"
+                "$ref": "#/components/schemas/CreateStudentDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Student"
+                "$ref": "#/components/schemas/CreateStudentDto"
               }
             }
           }
@@ -36,7 +36,7 @@
         }
       }
     },
-    "/api/admin/classes": {
+    "/api/admin/create-section": {
       "post": {
         "tags": [
           "Admin"
@@ -45,17 +45,79 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Class"
+                "$ref": "#/components/schemas/CreateSectionDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Class"
+                "$ref": "#/components/schemas/CreateSectionDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Class"
+                "$ref": "#/components/schemas/CreateSectionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/admin/create-teacher": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTeacherDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTeacherDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTeacherDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/admin/create-subject": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubjectDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubjectDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubjectDto"
               }
             }
           }
@@ -72,90 +134,25 @@
         "tags": [
           "Admin"
         ],
-        "parameters": [
-          {
-            "name": "teacherId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "classId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "subjectId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignTeacherSubjectDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignTeacherSubjectDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignTeacherSubjectDto"
+              }
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/admin/create-teacher": {
-      "post": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/admin/assign-teacher": {
-      "post": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "classId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "teacherId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -168,24 +165,214 @@
         "tags": [
           "Attendance"
         ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sessionId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "token": {
+                    "type": "string"
+                  },
+                  "studentId": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "sessionId": {
+                  "style": "form"
+                },
+                "token": {
+                  "style": "form"
+                },
+                "studentId": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/auth/web-login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/auth/mobile-login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/qr/generate": {
+      "post": {
+        "tags": [
+          "Qr"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/student/reset-password": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "studentId": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "studentId": {
+                  "style": "form"
+                },
+                "name": {
+                  "style": "form"
+                },
+                "newPassword": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/student/register": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "studentId": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "studentId": {
+                  "style": "form"
+                },
+                "name": {
+                  "style": "form"
+                },
+                "password": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/teacher/export": {
+      "get": {
+        "tags": [
+          "Teacher"
+        ],
         "parameters": [
           {
-            "name": "sessionId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "token",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "studentId",
+            "name": "sectionId",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -200,45 +387,26 @@
         }
       }
     },
-    "/api/auth/login": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/auth/generate-hash": {
+    "/api/teacher/my-students": {
       "get": {
         "tags": [
-          "Auth"
+          "Teacher"
         ],
         "parameters": [
           {
-            "name": "password",
+            "name": "userId",
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "sectionId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -249,42 +417,7 @@
         }
       }
     },
-    "/api/student/register": {
-      "post": {
-        "tags": [
-          "Student"
-        ],
-        "parameters": [
-          {
-            "name": "studentId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/teacher/my-classes": {
+    "/api/teacher/my-sections": {
       "get": {
         "tags": [
           "Teacher"
@@ -348,35 +481,37 @@
   },
   "components": {
     "schemas": {
-      "Class": {
+      "AssignTeacherSubjectDto": {
         "type": "object",
         "properties": {
-          "id": {
+          "teacherId": {
             "type": "integer",
             "format": "int32"
           },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "teacherId": {
+          "sectionId": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
-          "teacher": {
-            "$ref": "#/components/schemas/Teacher"
+          "subjectId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
-      "Student": {
+      "CreateSectionDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateStudentDto": {
+        "type": "object",
+        "properties": {
           "studentId": {
             "type": "string",
             "nullable": true
@@ -385,66 +520,49 @@
             "type": "string",
             "nullable": true
           },
-          "classId": {
+          "sectionId": {
             "type": "integer",
             "format": "int32"
           },
           "parentPhone": {
             "type": "string",
             "nullable": true
-          },
-          "isRegistered": {
-            "type": "boolean"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
           }
         },
         "additionalProperties": false
       },
-      "Teacher": {
+      "CreateSubjectDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
           "name": {
             "type": "string",
             "nullable": true
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
           }
         },
         "additionalProperties": false
       },
-      "User": {
+      "CreateTeacherDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
           "name": {
             "type": "string",
             "nullable": true
           },
-          "passwordHash": {
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
             "type": "string",
             "nullable": true
           },
-          "role": {
+          "password": {
             "type": "string",
             "nullable": true
           }

@@ -11,84 +11,129 @@ public class AdminController : ControllerBase
         _context = context;
     }
 
+    // ✅ CREATE STUDENT
     [HttpPost("students")]
-    public IActionResult CreateStudent(Student student)
+    public IActionResult CreateStudent([FromBody] CreateStudentDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.StudentId) || string.IsNullOrWhiteSpace(dto.Name))
+            return BadRequest("StudentId and Name are required");
 
-        student.IsRegistered = false;
-        _context.Students.Add(student);
-        _context.SaveChanges();
-        return Ok(student);
-    }
-
-
-    [HttpPost("classes")]
-    public IActionResult CreateClass(Class cls)
-    {
-        _context.Classes.Add(cls);
-        _context.SaveChanges();
-        return Ok(cls);
-    }
-    [HttpPost("assign-teacher-subject")]
-    public IActionResult AssignTeacherSubject(int teacherId, int classId, int subjectId)
-    {
-        // check if exists
-        var exists = _context.TeacherAssignments
-            .FirstOrDefault(x =>
-                x.TeacherId == teacherId &&
-                x.ClassId == classId &&
-                x.SubjectId == subjectId);
-
+        var exists = _context.Students
+    .Where(s => s.StudentId != null)
+    .FirstOrDefault(s => s.StudentId == dto.StudentId);
         if (exists != null)
-            return BadRequest("Already assigned");
+            return BadRequest("Student already exists");
 
-        var assignment = new TeacherAssignment
+        var sectionExists = _context.Sections.Any(s => s.Id == dto.SectionId);
+        if (!sectionExists)
+            return BadRequest("Invalid SectionId");
+
+        var student = new Student
         {
-            TeacherId = teacherId,
-            ClassId = classId,
-            SubjectId = subjectId
+            StudentId = dto.StudentId,
+            Name = dto.Name,
+            SectionId = dto.SectionId,
+            ParentPhone = dto.ParentPhone,
+            IsRegistered = false
         };
 
-        _context.TeacherAssignments.Add(assignment);
+        _context.Students.Add(student);
         _context.SaveChanges();
 
-        return Ok("Assigned successfully");
+        return Ok(new { message = "Student created successfully" });
     }
 
-    [HttpPost("create-teacher")]
-    public IActionResult CreateTeacher(string name, string password)
+    // ✅ CREATE CLASS
+    [HttpPost("create-section")]
+    public IActionResult CreateSection([FromBody] CreateSectionDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            return BadRequest("Section name is required");
+
+        var exists = _context.Sections.Any(s => s.Name == dto.Name);
+        if (exists)
+            return BadRequest("Section already exists");
+
+        _context.Sections.Add(new Section { Name = dto.Name });
+        _context.SaveChanges();
+
+        return Ok(new { message = "Section created successfully" });
+    }
+
+    // ✅ CREATE TEACHER (WITH USER)
+    [HttpPost("create-teacher")]
+    public IActionResult CreateTeacher([FromBody] CreateTeacherDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Name) || string.IsNullOrWhiteSpace(dto.Password))
+            return BadRequest("Name and Password required");
+
+        // ✅ CREATE USER (LOGIN ACCOUNT)
         var user = new User
         {
-            Name = name,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+            Name = dto.Name,
+            Password = dto.Password,
             Role = "Teacher"
         };
 
         _context.Users.Add(user);
         _context.SaveChanges();
 
+        // ✅ CREATE TEACHER (PROFILE ONLY)
         var teacher = new Teacher
         {
-            Name = name,
+            Name = dto.Name,
             UserId = user.Id
         };
 
         _context.Teachers.Add(teacher);
         _context.SaveChanges();
 
-        return Ok("Teacher created");
+        return Ok(new { message = "Teacher created successfully" });
     }
-    [HttpPost("assign-teacher")]
-    public IActionResult AssignTeacher(int classId, int teacherId)
-    {
-        var cls = _context.Classes.Find(classId);
-        if (cls == null) return NotFound();
 
-        cls.TeacherId = teacherId;
+    [HttpPost("create-subject")]
+    public IActionResult CreateSubject([FromBody] CreateSubjectDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            return BadRequest("Subject name is required");
+
+        var exists = _context.Subjects.Any(s => s.Name == dto.Name);
+        if (exists)
+            return BadRequest("Subject already exists");
+
+        var subject = new Subject
+        {
+            Name = dto.Name
+        };
+
+        _context.Subjects.Add(subject);
         _context.SaveChanges();
 
-        return Ok();
+        return Ok(new { message = "Subject created successfully", subject });
+    }
+
+    // ✅ ASSIGN SUBJECT
+    [HttpPost("assign-teacher-subject")]
+    public IActionResult AssignTeacherSubject([FromBody] AssignTeacherSubjectDto dto)
+    {
+        var exists = _context.TeacherAssignments.FirstOrDefault(x =>
+            x.TeacherId == dto.TeacherId &&
+            x.SectionId == dto.SectionId &&   // ✅ FIXED
+            x.SubjectId == dto.SubjectId);
+
+        if (exists != null)
+            return BadRequest("Already assigned");
+
+        var assignment = new TeacherAssignment
+        {
+            TeacherId = dto.TeacherId,
+            SectionId = dto.SectionId,   // ✅ FIXED
+            SubjectId = dto.SubjectId
+        };
+
+        _context.TeacherAssignments.Add(assignment);
+        _context.SaveChanges();
+
+        return Ok(new { message = "Assigned successfully" });
     }
 }
-

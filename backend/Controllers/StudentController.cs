@@ -12,8 +12,35 @@ public class StudentController : ControllerBase
         _context = context;
     }
 
+    [HttpPost("reset-password")]
+    public IActionResult ResetPassword(
+        [FromForm] string studentId,
+        [FromForm] string name,
+        [FromForm] string newPassword)
+    {
+        var student = _context.Students
+            .FirstOrDefault(s => s.StudentId == studentId && s.Name == name);
+
+        if (student == null)
+            return NotFound("Student not found");
+
+        var user = _context.Users.FirstOrDefault(u => u.Id == student.UserId);
+        if (user == null)
+            return NotFound("User not found");
+
+        // ✅ NO HASHING
+        user.Password = newPassword;
+
+        _context.SaveChanges();
+
+        return Ok(new { message = "Password reset successful" });
+    }
+
     [HttpPost("register")]
-    public IActionResult Register(string studentId, string name, string password)
+    public IActionResult Register(
+        [FromForm] string studentId,
+        [FromForm] string name,
+        [FromForm] string password)
     {
         var student = _context.Students
             .FirstOrDefault(s => s.StudentId == studentId && s.Name == name);
@@ -24,7 +51,7 @@ public class StudentController : ControllerBase
         var user = new User
         {
             Name = name,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+            Password = password,   // ✅ NO HASH
             Role = "Student"
         };
 
@@ -36,6 +63,6 @@ public class StudentController : ControllerBase
 
         _context.SaveChanges();
 
-        return Ok("Registered successfully");
+        return Ok(new { message = "Registered successfully" });
     }
 }

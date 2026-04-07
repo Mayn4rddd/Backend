@@ -1,27 +1,6 @@
 [
   {
     "ContainingType": "AdminController",
-    "Method": "AssignTeacher",
-    "RelativePath": "api/admin/assign-teacher",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "classId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "teacherId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "AdminController",
     "Method": "AssignTeacherSubject",
     "RelativePath": "api/admin/assign-teacher-subject",
     "HttpMethod": "POST",
@@ -29,34 +8,40 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "teacherId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "classId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "subjectId",
-        "Type": "System.Int32",
-        "IsRequired": false
+        "Name": "dto",
+        "Type": "AssignTeacherSubjectDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "AdminController",
-    "Method": "CreateClass",
-    "RelativePath": "api/admin/classes",
+    "Method": "CreateSection",
+    "RelativePath": "api/admin/create-section",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "cls",
-        "Type": "Class",
+        "Name": "dto",
+        "Type": "CreateSectionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AdminController",
+    "Method": "CreateSubject",
+    "RelativePath": "api/admin/create-subject",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "CreateSubjectDto",
         "IsRequired": true
       }
     ],
@@ -71,14 +56,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "password",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "dto",
+        "Type": "CreateTeacherDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -92,8 +72,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "student",
-        "Type": "Student",
+        "Name": "dto",
+        "Type": "CreateStudentDto",
         "IsRequired": true
       }
     ],
@@ -127,39 +107,44 @@
   },
   {
     "ContainingType": "AuthController",
-    "Method": "GenerateHash",
-    "RelativePath": "api/auth/generate-hash",
-    "HttpMethod": "GET",
+    "Method": "MobileLogin",
+    "RelativePath": "api/auth/mobile-login",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "password",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "request",
+        "Type": "LoginRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "AuthController",
-    "Method": "Login",
-    "RelativePath": "api/auth/login",
+    "Method": "WebLogin",
+    "RelativePath": "api/auth/web-login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "password",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "request",
+        "Type": "LoginRequest",
+        "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "QrController",
+    "Method": "GenerateQR",
+    "RelativePath": "api/qr/generate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -189,15 +174,78 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "StudentController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/student/reset-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentId",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "newPassword",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "TeacherController",
-    "Method": "GetMyClasses",
-    "RelativePath": "api/teacher/my-classes",
+    "Method": "Export",
+    "RelativePath": "api/teacher/export",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sectionId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TeacherController",
+    "Method": "GetMySections",
+    "RelativePath": "api/teacher/my-sections",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TeacherController",
+    "Method": "GetMyStudents",
+    "RelativePath": "api/teacher/my-students",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "sectionId",
         "Type": "System.Int32",
         "IsRequired": false
       }

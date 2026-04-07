@@ -2,7 +2,7 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ DATABASE
+// DATABASE
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -13,39 +13,41 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         }
     ));
 
-// ✅ ADD CORS (IMPORTANT)
+// CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReact",
+    options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // React URL
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            policy
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         });
 });
 
-// Services
+// SERVICES
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Swagger
+// DEV
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// ✅ USE CORS (MUST BE BEFORE AUTH)
-app.UseCors("AllowReact");
+// ❌ no https
+// app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+// 🔥 VERY IMPORTANT
+app.Run("http://0.0.0.0:5000");
