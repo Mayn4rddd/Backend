@@ -1,4 +1,6 @@
-﻿public class CreateTeacherDto
+﻿namespace backend.DTOs;
+
+public class CreateTeacherDto
 {
     public string Name { get; set; }
     public string Password { get; set; }

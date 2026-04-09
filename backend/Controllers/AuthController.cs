@@ -1,5 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using backend.Models;
+using backend.DTOs; 
+
+namespace backend.Controllers;
+
+
 
 [ApiController]
 [Route("api/auth")]

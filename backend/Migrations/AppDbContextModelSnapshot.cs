@@ -21,13 +21,19 @@ namespace backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Attendance", b =>
+            modelBuilder.Entity("backend.Models.Attendance", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttendanceSessionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QrSessionId")
+                        .HasColumnType("int");
 
                     b.Property<int>("SectionId")
                         .HasColumnType("int");
@@ -39,6 +45,12 @@ namespace backend.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
@@ -47,7 +59,7 @@ namespace backend.Migrations
                     b.ToTable("Attendance");
                 });
 
-            modelBuilder.Entity("QrSession", b =>
+            modelBuilder.Entity("backend.Models.AttendanceSession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,17 +67,49 @@ namespace backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ExpiryTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SectionId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("SessionId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AttendanceSessions");
+                });
+
+            modelBuilder.Entity("backend.Models.QrSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttendanceSessionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Expiry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SectionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("int");
@@ -79,7 +123,7 @@ namespace backend.Migrations
                     b.ToTable("QrSessions");
                 });
 
-            modelBuilder.Entity("Section", b =>
+            modelBuilder.Entity("backend.Models.Section", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -95,7 +139,7 @@ namespace backend.Migrations
                     b.ToTable("Sections");
                 });
 
-            modelBuilder.Entity("Student", b =>
+            modelBuilder.Entity("backend.Models.Student", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -133,7 +177,7 @@ namespace backend.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("Subject", b =>
+            modelBuilder.Entity("backend.Models.Subject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -150,7 +194,7 @@ namespace backend.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("Teacher", b =>
+            modelBuilder.Entity("backend.Models.Teacher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -172,7 +216,7 @@ namespace backend.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("TeacherAssignment", b =>
+            modelBuilder.Entity("backend.Models.TeacherAssignment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -194,7 +238,7 @@ namespace backend.Migrations
                     b.ToTable("TeacherAssignments");
                 });
 
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("backend.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -219,15 +263,15 @@ namespace backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Student", b =>
+            modelBuilder.Entity("backend.Models.Student", b =>
                 {
-                    b.HasOne("Section", "Section")
+                    b.HasOne("backend.Models.Section", "Section")
                         .WithMany()
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("User", "User")
+                    b.HasOne("backend.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
@@ -236,9 +280,9 @@ namespace backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Teacher", b =>
+            modelBuilder.Entity("backend.Models.Teacher", b =>
                 {
-                    b.HasOne("User", "User")
+                    b.HasOne("backend.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -1,5 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using backend.DTOs;
+using backend.Models;
+
+namespace backend.Controllers;
+
 
 [ApiController]
 [Route("api/teacher")]
@@ -23,6 +28,9 @@ public class TeacherController : ControllerBase
             .Where(a => a.SectionId == sectionId)
             .ToList();
 
+        // ✅ CREATE DICTIONARY OUTSIDE LOOP
+        var studentDict = students.ToDictionary(s => s.Id);
+
         using var workbook = new ClosedXML.Excel.XLWorkbook();
         var worksheet = workbook.Worksheets.Add("Attendance");
 
@@ -32,13 +40,16 @@ public class TeacherController : ControllerBase
 
         int row = 2;
 
-        foreach (var student in students)
+        foreach (var att in attendance)
         {
-            var att = attendance.FirstOrDefault(a => a.StudentId == student.Id);
+            // ✅ GET STUDENT FROM DICTIONARY
+            var student = studentDict.ContainsKey(att.StudentId)
+                ? studentDict[att.StudentId]
+                : null;
 
-            worksheet.Cell(row, 1).Value = student.Name;
-            worksheet.Cell(row, 2).Value = att != null ? "Present" : "Absent";
-            worksheet.Cell(row, 3).Value = att?.Timestamp;
+            worksheet.Cell(row, 1).Value = student?.Name;
+            worksheet.Cell(row, 2).Value = att.Status;
+            worksheet.Cell(row, 3).Value = att.Timestamp;
 
             row++;
         }
@@ -53,6 +64,44 @@ public class TeacherController : ControllerBase
         );
     }
 
+    [HttpGet("attendance-summary")]
+    public IActionResult GetAttendanceSummary(int sectionId, int subjectId)
+    {
+        var today = DateTime.UtcNow.Date;
+
+        // 🔥 TOTAL STUDENTS
+        var totalStudents = _context.Students
+            .Count(s => s.SectionId == sectionId);
+
+        // 🔥 TODAY ATTENDANCE
+        var todayAttendance = _context.Attendance
+            .Where(a =>
+                a.SectionId == sectionId &&
+                a.SubjectId == subjectId &&
+                a.Timestamp.Date == today
+            )
+            .ToList();
+
+        var present = todayAttendance.Count(a => a.Status == "Present");
+        var late = todayAttendance.Count(a => a.Status == "Late");
+
+        var marked = present + late;
+        var absent = totalStudents - marked;
+
+        double percentage = totalStudents == 0
+            ? 0
+            : (double)marked / totalStudents * 100;
+
+        return Ok(new
+        {
+            totalStudents,
+            present,
+            late,
+            absent,
+            percentage = Math.Round(percentage, 2)
+        });
+    }
+
     [HttpGet("my-students")]
     public IActionResult GetMyStudents([FromQuery] int userId, [FromQuery] int sectionId)
     {
@@ -62,7 +111,7 @@ public class TeacherController : ControllerBase
         if (teacher == null)
             return NotFound("Teacher not found");
 
-        var today = DateTime.Today;
+        var today = DateTime.UtcNow.Date;
 
         // ✅ ALL STUDENTS
         var allStudents = _context.Students
@@ -120,6 +169,7 @@ public class TeacherController : ControllerBase
                     {
                         sectionId = sec.Id,
                         section = sec.Name,
+                        subjectId = s.Id,   // 🔥 ADD THIS
                         subject = s.Name
                     }).Distinct().ToList();
 

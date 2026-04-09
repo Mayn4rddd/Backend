@@ -279,7 +279,6 @@ C:\Users\mayna\source\repos\backend\backend\obj\Debug\net8.0\refint\backend.dll
 C:\Users\mayna\source\repos\backend\backend\obj\Debug\net8.0\backend.pdb
 C:\Users\mayna\source\repos\backend\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
 C:\Users\mayna\source\repos\backend\backend\obj\Debug\net8.0\ref\backend.dll
-C:\Users\mayna\source\repos\BACKEND\backend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\mayna\source\repos\BACKEND\backend\bin\Debug\net8.0\ClosedXML.dll
 C:\Users\mayna\source\repos\BACKEND\backend\bin\Debug\net8.0\ClosedXML.Parser.dll
 C:\Users\mayna\source\repos\BACKEND\backend\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
@@ -288,3 +287,4 @@ C:\Users\mayna\source\repos\BACKEND\backend\bin\Debug\net8.0\ExcelNumberFormat.d
 C:\Users\mayna\source\repos\BACKEND\backend\bin\Debug\net8.0\RBush.dll
 C:\Users\mayna\source\repos\BACKEND\backend\bin\Debug\net8.0\SixLabors.Fonts.dll
 C:\Users\mayna\source\repos\BACKEND\backend\bin\Debug\net8.0\System.IO.Packaging.dll
+C:\Users\mayna\source\repos\BACKEND\backend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -1,4 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using backend.DTOs;
+using backend.Models;
+
+namespace backend.Controllers;
+
 
 [ApiController]
 [Route("api/admin")]
@@ -136,4 +141,33 @@ public class AdminController : ControllerBase
 
         return Ok(new { message = "Assigned successfully" });
     }
+
+    // ✅ GET ALL SUBJECTS
+    [HttpGet("subjects")]
+    public IActionResult GetSubjects()
+    {
+        return Ok(_context.Subjects.ToList());
+    }
+
+    // ✅ GET ALL SECTIONS
+    [HttpGet("sections")]
+    public IActionResult GetSections()
+    {
+        return Ok(_context.Sections.ToList());
+    }
+
+    // ✅ GET ALL TEACHERS
+    [HttpGet("teachers")]
+    public IActionResult GetTeachers()
+    {
+        return Ok(_context.Teachers.ToList());
+    }
+
+    // ✅ GET ALL STUDENTS
+    [HttpGet("students")]
+    public IActionResult GetStudents()
+    {
+        return Ok(_context.Students.ToList());
+    }
+
 }

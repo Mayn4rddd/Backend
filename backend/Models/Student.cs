@@ -1,4 +1,6 @@
-﻿public class Student
+﻿namespace backend.Models;
+
+public class Student
 {
     public int Id { get; set; }
     public string StudentId { get; set; }

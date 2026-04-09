@@ -1,4 +1,6 @@
-﻿public class AssignTeacherSubjectDto
+﻿namespace backend.DTOs; 
+
+public class AssignTeacherSubjectDto
 {
     public int TeacherId { get; set; }
     public int SectionId { get; set; }   // ✅ NEW

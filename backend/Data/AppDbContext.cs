@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
+using backend.Models;
+
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -13,4 +15,6 @@ public class AppDbContext : DbContext
     public DbSet<Section> Sections { get; set; }
     public DbSet<Attendance> Attendance { get; set; }
     public DbSet<QrSession> QrSessions { get; set; }
+
+    public DbSet<AttendanceSession> AttendanceSessions { get; set; }
 }
