@@ -24,7 +24,7 @@ public class AttendanceSessionController : ControllerBase
             SubjectId = dto.SubjectId,
             TeacherId = dto.TeacherId,
             StartTime = DateTime.UtcNow,
-            Mode = dto.Mode // QR or Manual
+            Mode = dto.Mode 
         };
 
         _context.AttendanceSessions.Add(session);

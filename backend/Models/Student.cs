@@ -7,7 +7,7 @@ public class Student
     public string Name { get; set; }
     public string ParentPhone { get; set; }
 
-    public int SectionId { get; set; }   // ✅ use this only
+    public int SectionId { get; set; }   
     public bool IsRegistered { get; set; }
 
     public int? UserId { get; set; }

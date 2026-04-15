@@ -8,5 +8,5 @@ public class AttendanceSession
     public int TeacherId { get; set; }
     public DateTime StartTime { get; set; }
 
-    public string Mode { get; set; } // "QR" or "Manual"
+    public string Mode { get; set; } 
 }

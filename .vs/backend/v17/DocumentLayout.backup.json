@@ -7,18 +7,6 @@
       "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\controllers\\teachercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|c:\\users\\mayna\\source\\repos\\backend\\backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\mayna\\source\\repos\\backend\\backend\\Migrations\\20260408084421_InitialCreateV1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\Migrations\\20260408084421_InitialCreateV1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|c:\\users\\mayna\\source\\repos\\backend\\backend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|c:\\users\\mayna\\source\\repos\\backend\\backend\\models\\attendance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\models\\attendance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -30,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -58,67 +46,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AdminController.cs",
-              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\AdminController.cs",
-              "RelativeDocumentMoniker": "backend\\Controllers\\AdminController.cs",
-              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\AdminController.cs*",
-              "RelativeToolTip": "backend\\Controllers\\AdminController.cs*",
-              "ViewState": "AgIAAGEAAAAAAAAAAAAYwKsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T08:51:27.061Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "20260408084421_InitialCreateV1.cs",
-              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Migrations\\20260408084421_InitialCreateV1.cs",
-              "RelativeDocumentMoniker": "backend\\Migrations\\20260408084421_InitialCreateV1.cs",
-              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Migrations\\20260408084421_InitialCreateV1.cs",
-              "RelativeToolTip": "backend\\Migrations\\20260408084421_InitialCreateV1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAABBAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T08:44:22.003Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "appsettings.Development.json",
-              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\appsettings.Development.json",
-              "RelativeDocumentMoniker": "backend\\appsettings.Development.json",
-              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\appsettings.Development.json",
-              "RelativeToolTip": "backend\\appsettings.Development.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-04-08T08:43:12.286Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "TeacherController.cs",
               "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\TeacherController.cs",
               "RelativeDocumentMoniker": "backend\\Controllers\\TeacherController.cs",
               "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\TeacherController.cs",
               "RelativeToolTip": "backend\\Controllers\\TeacherController.cs",
-              "ViewState": "AgIAAJMAAAAAAAAAAAAIwJ8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHIAAAAAAAAAAAAuwIoAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T08:40:18.295Z",
+              "WhenOpened": "2026-04-15T08:08:24.575Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "Attendance.cs",
               "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Models\\Attendance.cs",
               "RelativeDocumentMoniker": "backend\\Models\\Attendance.cs",
               "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Models\\Attendance.cs",
               "RelativeToolTip": "backend\\Models\\Attendance.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T08:21:40.162Z",
+              "WhenOpened": "2026-04-15T08:05:54.125Z",
               "EditorCaption": ""
             }
           ]

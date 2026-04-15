@@ -65,12 +65,86 @@
   },
   {
     "ContainingType": "backend.Controllers.AdminController",
+    "Method": "DeleteSection",
+    "RelativePath": "api/admin/section/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AdminController",
+    "Method": "UpdateSection",
+    "RelativePath": "api/admin/section/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "backend.DTOs.CreateSectionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AdminController",
     "Method": "GetSections",
     "RelativePath": "api/admin/sections",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AdminController",
+    "Method": "UpdateStudent",
+    "RelativePath": "api/admin/student/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "backend.DTOs.CreateStudentDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AdminController",
+    "Method": "DeleteStudent",
+    "RelativePath": "api/admin/student/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -101,12 +175,91 @@
   },
   {
     "ContainingType": "backend.Controllers.AdminController",
+    "Method": "DeleteSubject",
+    "RelativePath": "api/admin/subject/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "force",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AdminController",
+    "Method": "UpdateSubject",
+    "RelativePath": "api/admin/subject/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "backend.DTOs.CreateSubjectDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AdminController",
     "Method": "GetSubjects",
     "RelativePath": "api/admin/subjects",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AdminController",
+    "Method": "UpdateTeacher",
+    "RelativePath": "api/admin/teacher/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "backend.DTOs.CreateTeacherDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AdminController",
+    "Method": "DeleteTeacher",
+    "RelativePath": "api/admin/teacher/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -121,16 +274,16 @@
   },
   {
     "ContainingType": "backend.Controllers.AttendanceController",
-    "Method": "CloseSession",
-    "RelativePath": "api/attendance/close-session",
-    "HttpMethod": "POST",
+    "Method": "GetLiveAttendance",
+    "RelativePath": "api/attendance/live/{sessionId}",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "sessionId",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -160,14 +313,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "token",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "studentId",
-        "Type": "System.Int32",
-        "IsRequired": false
+        "Name": "dto",
+        "Type": "backend.DTOs.ScanDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -328,6 +476,58 @@
   },
   {
     "ContainingType": "backend.Controllers.TeacherController",
+    "Method": "GetMasterlist",
+    "RelativePath": "api/teacher/masterlist",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sectionId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.TeacherController",
+    "Method": "GetMasterlistGrid",
+    "RelativePath": "api/teacher/masterlist-grid",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sectionId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "subjectId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "teacherId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "startDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "endDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.TeacherController",
     "Method": "GetMySections",
     "RelativePath": "api/teacher/my-sections",
     "HttpMethod": "GET",
@@ -357,6 +557,22 @@
       },
       {
         "Name": "sectionId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.TeacherController",
+    "Method": "GetSessionAttendance",
+    "RelativePath": "api/teacher/session-attendance",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sessionId",
         "Type": "System.Int32",
         "IsRequired": false
       }

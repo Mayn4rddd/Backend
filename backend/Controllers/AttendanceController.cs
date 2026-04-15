@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 
-
 namespace backend.Controllers;
-
 
 [ApiController]
 [Route("api/attendance")]
@@ -23,115 +21,114 @@ public class AttendanceController : ControllerBase
     [HttpPost("manual")]
     public IActionResult ManualAttendance([FromBody] ManualAttendanceDto dto)
     {
-        var exists = _context.Attendance.Any(a =>
-            a.StudentId == dto.StudentId &&
-            a.AttendanceSessionId == dto.SessionId
+        var student = _context.Students
+            .FirstOrDefault(s => s.Id == dto.StudentId);
+
+        if (student == null)
+            return BadRequest("Student not found");
+
+        var today = DateTime.UtcNow.Date;
+
+        var session = _context.AttendanceSessions
+            .FirstOrDefault(s =>
+                s.SectionId == dto.SectionId &&
+                s.SubjectId == dto.SubjectId &&
+                s.TeacherId == dto.TeacherId &&
+                s.Mode == "Manual" &&
+                s.StartTime.Date == today
+            );
+
+        if (session == null)
+        {
+            session = new AttendanceSession
+            {
+                SectionId = dto.SectionId,
+                SubjectId = dto.SubjectId,
+                TeacherId = dto.TeacherId,
+                StartTime = DateTime.UtcNow,
+                Mode = "Manual"
+            };
+
+            _context.AttendanceSessions.Add(session);
+            _context.SaveChanges();
+        }
+
+        var alreadyMarked = _context.Attendance.Any(a =>
+            a.StudentDbId == student.Id &&
+            a.AttendanceSessionId == session.Id
         );
 
-        if (exists)
-            return BadRequest("Already marked");
+        if (alreadyMarked)
+            return BadRequest("Student already marked for today");
 
         var attendance = new Attendance
         {
-            StudentId = dto.StudentId,
+            StudentDbId = student.Id,
             SectionId = dto.SectionId,
             SubjectId = dto.SubjectId,
             TeacherId = dto.TeacherId,
             Timestamp = DateTime.UtcNow,
             Status = dto.Status,
-            AttendanceSessionId = dto.SessionId
+            AttendanceSessionId = session.Id
         };
 
         _context.Attendance.Add(attendance);
         _context.SaveChanges();
 
-        return Ok(new { message = "Manual attendance recorded" });
-    }
-
-    [HttpPost("close-session")]
-    public IActionResult CloseSession(int sessionId)
-    {
-        var session = _context.AttendanceSessions
-            .FirstOrDefault(s => s.Id == sessionId);
-
-        if (session == null)
-            return NotFound();
-
-        var students = _context.Students
-            .Where(s => s.SectionId == session.SectionId)
-            .ToList();
-
-        foreach (var student in students)
+        return Ok(new
         {
-            var exists = _context.Attendance.Any(a =>
-                a.StudentId == student.Id &&
-                a.AttendanceSessionId == sessionId
-            );
-
-            if (!exists)
-            {
-                _context.Attendance.Add(new Attendance
-                {
-                    StudentId = student.Id,
-                    SectionId = session.SectionId,
-                    SubjectId = session.SubjectId,
-                    TeacherId = session.TeacherId,
-                    Timestamp = DateTime.UtcNow,
-                    Status = "Absent",
-                    AttendanceSessionId = sessionId
-                });
-            }
-        }
-
-        _context.SaveChanges();
-
-        return Ok("Session closed. Absentees marked.");
+            message = "Manual attendance recorded",
+            studentName = student.Name,
+            status = dto.Status,
+            date = attendance.Timestamp.ToString("yyyy-MM-dd")
+        });
     }
 
     [HttpPost("scan")]
-    public IActionResult Scan(
-     [FromForm] string token,
-     [FromForm] int studentId)
+    public IActionResult Scan([FromBody] ScanDto dto)
     {
-        var now = DateTime.UtcNow; // ✅ FIXED
+        var token = dto.Token;
 
-        // 🔥 1. FIND SESSION
+        var now = DateTime.UtcNow;
+
         var session = _context.QrSessions
             .FirstOrDefault(s => s.Token == token);
 
         if (session == null)
             return BadRequest("Invalid session");
 
-        // 🔥 2. CHECK EXPIRY
         if (session.Expiry < now)
             return BadRequest("Session expired");
 
-        // 🔥 3. PREVENT DUPLICATE (STRONG FIX 🔥)
+        var student = _context.Students
+            .FirstOrDefault(s => s.StudentId == dto.StudentId);
+
+        if (student == null)
+            return BadRequest("Student not found");
+
         var exists = _context.Attendance.Any(a =>
-     a.StudentId == studentId &&
-     a.AttendanceSessionId == session.AttendanceSessionId
+            a.StudentDbId == student.Id &&
+            a.AttendanceSessionId == session.AttendanceSessionId
         );
 
         if (exists)
             return BadRequest("Already scanned for this session");
 
-        // 🔥 4. DETERMINE STATUS
         var lateThreshold = session.StartTime.AddMinutes(10);
 
         string status = now > lateThreshold
-    ? AttendanceStatus.Late
-    : AttendanceStatus.Present;
+            ? AttendanceStatus.Late
+            : AttendanceStatus.Present;
 
-        // 🔥 5. SAVE
         var attendance = new Attendance
         {
-            StudentId = studentId,
+            StudentDbId = student.Id,
             SectionId = session.SectionId,
             SubjectId = session.SubjectId,
             TeacherId = session.TeacherId,
             Timestamp = now,
             Status = status,
-            QrSessionId = session.Id,  // ✅ IMPORTANT
+            QrSessionId = session.Id,
             AttendanceSessionId = session.AttendanceSessionId
         };
 
@@ -141,7 +138,39 @@ public class AttendanceController : ControllerBase
         return Ok(new
         {
             message = "Attendance recorded",
+            studentName = student.Name,
             status
         });
+    }
+
+    [HttpGet("live/{sessionId}")]
+    public IActionResult GetLiveAttendance(int sessionId)
+    {
+        var data = _context.Attendance
+            .Where(a => a.AttendanceSessionId == sessionId)
+            .Select(a => new
+            {
+                studentName = _context.Students
+                    .Where(s => s.Id == a.StudentDbId)
+                    .Select(s => s.Name)
+                    .FirstOrDefault(),
+
+                studentId = _context.Students
+                    .Where(s => s.Id == a.StudentDbId)
+                    .Select(s => s.StudentId)
+                    .FirstOrDefault(),
+
+                section = _context.Sections
+                    .Where(sec => sec.Id == a.SectionId)
+                    .Select(sec => sec.Name)
+                    .FirstOrDefault(),
+
+                status = a.Status,
+                time = a.Timestamp
+            })
+            .OrderByDescending(x => x.time)
+            .ToList();
+
+        return Ok(data);
     }
 }

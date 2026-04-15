@@ -6,8 +6,6 @@ using backend.DTOs;
 
 namespace backend.Controllers;
 
-
-
 [ApiController]
 [Route("api/qr")]
 public class QrController : ControllerBase
@@ -28,7 +26,6 @@ public class QrController : ControllerBase
         if (teacher == null)
             return NotFound("Teacher not found");
 
-        // ✅ Validate teacher assignment
         var isAssigned = _context.TeacherAssignments.Any(x =>
             x.TeacherId == teacher.Id &&
             x.SectionId == dto.SectionId &&
@@ -38,13 +35,15 @@ public class QrController : ControllerBase
         if (!isAssigned)
             return BadRequest("You are not assigned to this section and subject");
 
-        // 🔥 NEW: FIND OR CREATE ATTENDANCE SESSION (QR MODE)
+        var today = DateTime.UtcNow.Date;
+
         var attendanceSession = _context.AttendanceSessions
             .FirstOrDefault(s =>
                 s.SectionId == dto.SectionId &&
                 s.SubjectId == dto.SubjectId &&
                 s.TeacherId == teacher.Id &&
-                s.Mode == "QR"
+                s.Mode == "QR" &&
+                s.StartTime.Date == today
             );
 
         if (attendanceSession == null)
@@ -62,11 +61,9 @@ public class QrController : ControllerBase
             _context.SaveChanges();
         }
 
-        // 🔥 Generate QR token
         var token = Guid.NewGuid().ToString();
         var now = DateTime.UtcNow;
 
-        // 🔥 Create QR session (linked to AttendanceSession)
         var qrSession = new QrSession
         {
             SectionId = dto.SectionId,
@@ -75,7 +72,7 @@ public class QrController : ControllerBase
             Token = token,
             StartTime = now,
             Expiry = now.AddMinutes(5),
-            AttendanceSessionId = attendanceSession.Id // ✅ LINK
+            AttendanceSessionId = attendanceSession.Id
         };
 
         _context.QrSessions.Add(qrSession);
@@ -84,7 +81,7 @@ public class QrController : ControllerBase
         return Ok(new
         {
             qrSessionId = qrSession.Id,
-            attendanceSessionId = attendanceSession.Id, // 🔥 IMPORTANT for frontend/manual
+            attendanceSessionId = attendanceSession.Id,
             token = qrSession.Token,
             expiresAt = qrSession.Expiry
         });

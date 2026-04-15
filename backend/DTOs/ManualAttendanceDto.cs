@@ -7,5 +7,5 @@ public class ManualAttendanceDto
     public int SectionId { get; set; }
     public int SubjectId { get; set; }
     public int TeacherId { get; set; }
-    public string Status { get; set; } // Present, Late, Absent
+    public string Status { get; set; } 
 }

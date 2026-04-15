@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using backend.Models;
-using backend.DTOs; 
+using backend.DTOs;
 
 namespace backend.Controllers;
-
-
 
 [ApiController]
 [Route("api/auth")]
@@ -18,18 +17,18 @@ public class AuthController : ControllerBase
         _context = context;
     }
 
-    // ✅ WEB LOGIN (React)
     [HttpPost("web-login")]
     public IActionResult WebLogin([FromBody] LoginRequest request)
     {
         if (request == null ||
-            string.IsNullOrEmpty(request.Name) ||
-            string.IsNullOrEmpty(request.Password))
+            string.IsNullOrWhiteSpace(request.Username) ||
+            string.IsNullOrWhiteSpace(request.Password))
         {
-            return BadRequest("Name or password is empty");
+            return BadRequest(new { message = "Username or password is empty" });
         }
 
-        var user = _context.Users.FirstOrDefault(u => u.Name == request.Name);
+        var user = _context.Users
+            .FirstOrDefault(u => u.Username == request.Username);
 
         if (user == null)
             return Unauthorized(new { message = "User not found" });
@@ -37,7 +36,6 @@ public class AuthController : ControllerBase
         if (user.Password != request.Password)
             return Unauthorized(new { message = "Invalid password" });
 
-        // 🚫 BLOCK STUDENTS HERE
         if (user.Role == "Student")
         {
             return Unauthorized(new
@@ -46,28 +44,30 @@ public class AuthController : ControllerBase
             });
         }
 
+        var token = Guid.NewGuid().ToString();
+
         return Ok(new
         {
-            token = "sample-token",
+            token = token,
             role = user.Role,
+            username = user.Username,
             name = user.Name,
             userId = user.Id
         });
     }
-    
-   
-    // ✅ MOBILE LOGIN (Flutter)
+
     [HttpPost("mobile-login")]
     public IActionResult MobileLogin([FromBody] LoginRequest request)
     {
         if (request == null ||
-            string.IsNullOrEmpty(request.Name) ||
-            string.IsNullOrEmpty(request.Password))
+            string.IsNullOrWhiteSpace(request.Username) ||
+            string.IsNullOrWhiteSpace(request.Password))
         {
-            return BadRequest("Name or password is empty");
+            return BadRequest(new { message = "Username or password is empty" });
         }
 
-        var user = _context.Users.FirstOrDefault(u => u.Name == request.Name);
+        var user = _context.Users
+            .FirstOrDefault(u => u.Username == request.Username);
 
         if (user == null)
             return Unauthorized(new { message = "User not found" });
@@ -75,14 +75,18 @@ public class AuthController : ControllerBase
         if (user.Password != request.Password)
             return Unauthorized(new { message = "Invalid password" });
 
-        // ✅ Students allowed here
+        var student = _context.Students
+      .FirstOrDefault(s => s.UserId == user.Id);
 
+        var token = Guid.NewGuid().ToString();
         return Ok(new
         {
-            token = "sample-token",
+            token = token,
             role = user.Role,
+            username = user.Username,
             name = user.Name,
-            userId = user.Id
+            userId = user.Id,
+            studentId = student != null ? student.StudentId : null 
         });
     }
 }

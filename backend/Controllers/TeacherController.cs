@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using backend.DTOs;
+﻿using backend.DTOs;
 using backend.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace backend.Controllers;
-
 
 [ApiController]
 [Route("api/teacher")]
@@ -24,11 +24,12 @@ public class TeacherController : ControllerBase
             .Where(s => s.SectionId == sectionId)
             .ToList();
 
+        var today = DateTime.UtcNow.Date;
+
         var attendance = _context.Attendance
-            .Where(a => a.SectionId == sectionId)
+            .Where(a => a.SectionId == sectionId && a.Timestamp.Date == today)
             .ToList();
 
-        // ✅ CREATE DICTIONARY OUTSIDE LOOP
         var studentDict = students.ToDictionary(s => s.Id);
 
         using var workbook = new ClosedXML.Excel.XLWorkbook();
@@ -42,9 +43,8 @@ public class TeacherController : ControllerBase
 
         foreach (var att in attendance)
         {
-            // ✅ GET STUDENT FROM DICTIONARY
-            var student = studentDict.ContainsKey(att.StudentId)
-                ? studentDict[att.StudentId]
+            var student = studentDict.ContainsKey(att.StudentDbId)
+                ? studentDict[att.StudentDbId]
                 : null;
 
             worksheet.Cell(row, 1).Value = student?.Name;
@@ -64,16 +64,139 @@ public class TeacherController : ControllerBase
         );
     }
 
+    [HttpGet("masterlist-grid")]
+    public IActionResult GetMasterlistGrid(
+    int sectionId,
+    int subjectId,
+    int teacherId,
+    DateTime startDate,
+    DateTime endDate)
+    {
+        var students = _context.Students
+            .Where(s => s.SectionId == sectionId)
+            .OrderBy(s => s.Name)
+            .ToList();
+
+        var scheduleDays = _context.TeacherSchedules
+            .Where(ts =>
+                _context.TeacherAssignments
+                    .Any(ta =>
+                        ta.Id == ts.TeacherAssignmentId &&
+                        ta.SectionId == sectionId &&
+                        ta.SubjectId == subjectId &&
+                        ta.TeacherId == teacherId
+                    )
+            )
+            .Select(ts => ts.Day)
+            .Distinct()
+            .ToList();
+
+        if (!scheduleDays.Any())
+        {
+            scheduleDays = new List<string> { "Monday", "Thursday" };
+        }
+
+        var dates = Enumerable.Range(0, (endDate - startDate).Days + 1)
+            .Select(d => startDate.AddDays(d))
+            .Where(date => scheduleDays.Contains(date.DayOfWeek.ToString()))
+            .Select(date => date.ToString("yyyy-MM-dd"))
+            .ToList();
+
+        var attendance = _context.Attendance
+            .Where(a =>
+                a.SectionId == sectionId &&
+                a.SubjectId == subjectId &&
+                a.TeacherId == teacherId &&
+                a.Timestamp.Date >= startDate.Date &&
+                a.Timestamp.Date <= endDate.Date
+            )
+            .ToList();
+
+        var result = students.Select(s =>
+        {
+            var records = new Dictionary<string, string>();
+
+            foreach (var date in dates)
+            {
+                var att = attendance
+                    .Where(a =>
+                        a.StudentDbId == s.Id &&
+                        a.Timestamp.ToString("yyyy-MM-dd") == date
+                    )
+                    .OrderByDescending(a => a.Timestamp)
+                    .FirstOrDefault();
+
+                records[date] = att != null
+                    ? (att.Status == "Present" ? "P"
+                       : att.Status == "Late" ? "L"
+                       : "A")
+                    : "A";
+            }
+
+            return new
+            {
+                studentId = s.StudentId,
+                studentName = s.Name,
+                records = records
+            };
+        }).ToList();
+
+        return Ok(new
+        {
+            dates,
+            students = result
+        });
+    }
+
+    [HttpGet("masterlist")]
+    public IActionResult GetMasterlist(int sectionId)
+    {
+        var students = _context.Students
+            .Where(s => s.SectionId == sectionId)
+            .ToList();
+
+        var attendanceRecords = _context.Attendance
+            .Where(a => a.SectionId == sectionId)
+            .ToList();
+
+        var result = students.Select(s =>
+        {
+            var studentAttendance = attendanceRecords
+                .Where(a => a.StudentDbId == s.Id)
+                .ToList();
+
+            var attendanceByDate = studentAttendance
+                .GroupBy(a => a.Timestamp.Date)
+                .ToDictionary(
+                    g => g.Key.ToString("yyyy-MM-dd"),
+                    g => g.OrderByDescending(x => x.Timestamp).First().Status
+                );
+
+            return new
+            {
+                studentId = s.StudentId,
+                studentName = s.Name,
+                attendance = attendanceByDate
+            };
+        }).ToList();
+
+        var section = _context.Sections.FirstOrDefault(s => s.Id == sectionId);
+
+        return Ok(new
+        {
+            sectionName = section?.Name,
+            students = result
+        });
+    }
+
     [HttpGet("attendance-summary")]
     public IActionResult GetAttendanceSummary(int sectionId, int subjectId)
     {
         var today = DateTime.UtcNow.Date;
 
-        // 🔥 TOTAL STUDENTS
         var totalStudents = _context.Students
             .Count(s => s.SectionId == sectionId);
 
-        // 🔥 TODAY ATTENDANCE
         var todayAttendance = _context.Attendance
             .Where(a =>
                 a.SectionId == sectionId &&
@@ -113,7 +236,6 @@ public class TeacherController : ControllerBase
 
         var today = DateTime.UtcNow.Date;
 
-        // ✅ ALL STUDENTS
         var allStudents = _context.Students
             .Where(s => s.SectionId == sectionId)
             .Select(s => new
@@ -123,18 +245,16 @@ public class TeacherController : ControllerBase
             })
             .ToList();
 
-        // ✅ PRESENT STUDENTS (scanned today)
         var presentStudents = _context.Attendance
             .Where(a => a.SectionId == sectionId && a.Timestamp.Date == today)
             .Select(a => new
             {
-                studentId = a.StudentId,
+                studentId = a.StudentDbId,
                 status = a.Status,
                 date = a.Timestamp
             })
             .ToList();
 
-        // ✅ COMBINE → ADD STATUS
         var result = allStudents.Select(s =>
         {
             var present = presentStudents
@@ -169,11 +289,35 @@ public class TeacherController : ControllerBase
                     {
                         sectionId = sec.Id,
                         section = sec.Name,
-                        subjectId = s.Id,   // 🔥 ADD THIS
-                        subject = s.Name
-                    }).Distinct().ToList();
+                        subjectId = s.Id,
+                        subject = s.Name,
+                        schedules = _context.TeacherSchedules
+                            .Where(ts => ts.TeacherAssignmentId == ta.Id)
+                            .Select(ts => new
+                            {
+                                day = ts.Day,
+                                startTime = ts.StartTime,
+                                endTime = ts.EndTime
+                            }).ToList()
+                    }).ToList();
 
         return Ok(data);
     }
-}
 
+    [HttpGet("session-attendance")]
+    public IActionResult GetSessionAttendance(int sessionId)
+    {
+        var attendance = _context.Attendance
+            .Include(a => a.Student)
+            .Where(a => a.AttendanceSessionId == sessionId)
+            .Select(a => new AttendanceViewDto
+            {
+                StudentName = a.Student.Name,
+                Status = a.Status,
+                Time = a.Timestamp
+            })
+            .ToList();
+
+        return Ok(attendance);
+    }
+}

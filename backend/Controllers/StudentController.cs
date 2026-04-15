@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using backend.DTOs;
 using backend.Models;
+
 namespace backend.Controllers;
-
-
 
 [ApiController]
 [Route("api/student")]
@@ -24,20 +23,26 @@ public class StudentController : ControllerBase
         var students = _context.Students
             .Where(s => s.SectionId == sectionId)
             .OrderBy(s => s.Name)
-            .Select(s => new
-            {
-                s.Id,
-                s.Name,
-                s.StudentId,
-
-                Status = _context.Attendance
-                    .Where(a => a.StudentId == s.Id && a.AttendanceSessionId == sessionId)
-                    .Select(a => a.Status)
-                    .FirstOrDefault() ?? AttendanceStatus.NotMarked
-            })
             .ToList();
 
-        return Ok(students);
+        var attendance = _context.Attendance
+            .Where(a => a.AttendanceSessionId == sessionId)
+            .ToList();
+
+        var result = students.Select(s =>
+        {
+            var record = attendance
+                .FirstOrDefault(a => a.StudentDbId == s.Id);
+
+            return new
+            {
+                studentId = s.StudentId,
+                studentName = s.Name,
+                status = record?.Status ?? AttendanceStatus.NotMarked
+            };
+        });
+
+        return Ok(result);
     }
 
     [HttpPost("reset-password")]
@@ -64,19 +69,28 @@ public class StudentController : ControllerBase
     public IActionResult Register([FromBody] RegisterStudentDto dto)
     {
         var student = _context.Students
-            .FirstOrDefault(s => s.StudentId == dto.StudentId && s.Name == dto.Name);
+            .FirstOrDefault(s => s.StudentId == dto.StudentId);
 
-        if (student == null || student.IsRegistered)
-            return BadRequest("Invalid student");
+        if (student == null)
+            return BadRequest("Student ID not found");
+
+        if (student.IsRegistered)
+            return BadRequest("Student already registered");
+
+        var usernameExists = _context.Users.Any(u => u.Username == dto.Username);
+        if (usernameExists)
+            return BadRequest("Username already taken");
 
         var user = new User
         {
-            Name = dto.Name,
+            Name = student.Name,
+            Username = dto.Username,
             Password = dto.Password,
             Role = "Student"
         };
 
         _context.Users.Add(user);
+        _context.SaveChanges();
 
         student.UserId = user.Id;
         student.IsRegistered = true;

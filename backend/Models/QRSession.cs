@@ -8,9 +8,9 @@ public class QrSession
     public string Token { get; set; }
     public DateTime Expiry { get; set; }
 
-    public int SubjectId { get; set; }   // 🔥 NEW
+    public int SubjectId { get; set; }   
 
-    public DateTime StartTime { get; set; }   // 🔥 NEW
+    public DateTime StartTime { get; set; }   
 
     public int AttendanceSessionId { get; set; }
 
