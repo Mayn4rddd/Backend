@@ -3,12 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\mayna\\source\\repos\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|c:\\users\\mayna\\source\\repos\\backend\\backend\\controllers\\teachercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\controllers\\teachercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|c:\\users\\mayna\\source\\repos\\backend\\backend\\controllers\\qrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\controllers\\qrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|c:\\users\\mayna\\source\\repos\\backend\\backend\\models\\attendance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\models\\attendance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\mayna\\source\\repos\\backend\\backend\\Migrations\\20260417103811_AddUniqueAttendance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\Migrations\\20260417103811_AddUniqueAttendance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|c:\\users\\mayna\\source\\repos\\backend\\backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|c:\\users\\mayna\\source\\repos\\backend\\backend\\controllers\\attendancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\controllers\\attendancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|c:\\users\\mayna\\source\\repos\\backend\\backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|c:\\users\\mayna\\source\\repos\\backend\\backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28F4B57C-72F9-47E8-9ECC-007BD14553C9}|backend\\backend.csproj|solutionrelative:backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -45,29 +61,85 @@
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "TeacherController.cs",
-              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\TeacherController.cs",
-              "RelativeDocumentMoniker": "backend\\Controllers\\TeacherController.cs",
-              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\TeacherController.cs",
-              "RelativeToolTip": "backend\\Controllers\\TeacherController.cs",
-              "ViewState": "AgIAAHIAAAAAAAAAAAAuwIoAAAAlAAAAAAAAAA==",
+              "Title": "QrController.cs",
+              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\QrController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\QrController.cs",
+              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\QrController.cs",
+              "RelativeToolTip": "backend\\Controllers\\QrController.cs",
+              "ViewState": "AgIAAG0AAAAAAAAAAAAwwIkAAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T08:08:24.575Z",
+              "WhenOpened": "2026-04-17T10:52:29.103Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Attendance.cs",
-              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Models\\Attendance.cs",
-              "RelativeDocumentMoniker": "backend\\Models\\Attendance.cs",
-              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Models\\Attendance.cs",
-              "RelativeToolTip": "backend\\Models\\Attendance.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAmAAAAAAAAAA==",
+              "Title": "20260417103811_AddUniqueAttendance.cs",
+              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Migrations\\20260417103811_AddUniqueAttendance.cs",
+              "RelativeDocumentMoniker": "backend\\Migrations\\20260417103811_AddUniqueAttendance.cs",
+              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Migrations\\20260417103811_AddUniqueAttendance.cs",
+              "RelativeToolTip": "backend\\Migrations\\20260417103811_AddUniqueAttendance.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAA1wAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T08:05:54.125Z",
+              "WhenOpened": "2026-04-17T10:38:11.876Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "backend\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "backend\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAswA8AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T10:37:15.588Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AttendanceController.cs",
+              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\AttendanceController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\AttendanceController.cs",
+              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\AttendanceController.cs",
+              "RelativeToolTip": "backend\\Controllers\\AttendanceController.cs",
+              "ViewState": "AgIAALgAAAAAAAAAAAAowMYAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T10:32:02.286Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "backend\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAAJUBAAAAAAAAAAAAAKIBAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T10:31:57.56Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "backend\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\mayna\\source\\repos\\backend\\backend\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "backend\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAFgAAAAAAAAAAIAwwGgAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T10:31:48.828Z",
               "EditorCaption": ""
             }
           ]

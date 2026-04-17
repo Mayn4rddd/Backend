@@ -52,11 +52,15 @@
           "dependencies": {
             "BCrypt.Net-Next": {
               "target": "Package",
-              "version": "[4.0.0, )"
+              "version": "[4.1.0, )"
             },
             "ClosedXML": {
               "target": "Package",
               "version": "[0.105.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",

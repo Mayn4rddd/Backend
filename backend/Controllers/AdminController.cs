@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using backend.DTOs;
+﻿using backend.DTOs;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
@@ -13,6 +15,40 @@ public class AdminController : ControllerBase
     public AdminController(AppDbContext context)
     {
         _context = context;
+    }
+    [HttpPost("create-admin")]
+    public IActionResult CreateAdmin([FromBody] CreateUserDto dto)
+    {
+        if (dto == null ||
+            string.IsNullOrWhiteSpace(dto.Username) ||
+            string.IsNullOrWhiteSpace(dto.Password))
+        {
+            return BadRequest(new { message = "Invalid input" });
+        }
+
+        var existingUser = _context.Users
+            .FirstOrDefault(u => u.Username == dto.Username);
+
+        if (existingUser != null)
+        {
+            return BadRequest(new { message = "Username already exists" });
+        }
+
+        var user = new User
+        {
+            Name = dto.Name,
+            Username = dto.Username,
+            Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+            Role = "Admin"
+        };
+
+        _context.Users.Add(user);
+        _context.SaveChanges();
+
+        return Ok(new
+        {
+            message = "Admin created successfully"
+        });
     }
 
     [HttpPost("students")]
@@ -81,7 +117,7 @@ public class AdminController : ControllerBase
         {
             Name = dto.Name,
             Username = dto.Username,
-            Password = dto.Password,
+            Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             Role = "Teacher"
         };
 
@@ -247,6 +283,9 @@ public class AdminController : ControllerBase
     [HttpDelete("section/{id}")]
     public IActionResult DeleteSection(int id)
     {
+        if (_context.Students.Any(s => s.SectionId == id))
+            return BadRequest("Cannot delete section with students");
+
         var section = _context.Sections.Find(id);
 
         if (section == null)
@@ -285,7 +324,17 @@ public class AdminController : ControllerBase
     [HttpGet("teachers")]
     public IActionResult GetTeachers()
     {
-        return Ok(_context.Teachers.ToList());
+        var teachers = _context.Teachers
+            .Include(t => t.User)
+            .Select(t => new
+            {
+                id = t.Id,
+                name = t.Name,
+                username = t.User.Username
+            })
+            .ToList();
+
+        return Ok(teachers);
     }
 
     [HttpPut("teacher/{id}")]
@@ -304,7 +353,7 @@ public class AdminController : ControllerBase
         {
             user.Name = dto.Name;
             user.Username = dto.Username;
-            user.Password = dto.Password;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
         }
 
         _context.SaveChanges();
@@ -335,25 +384,20 @@ public class AdminController : ControllerBase
     [HttpGet("students")]
     public IActionResult GetStudents()
     {
-        return Ok(_context.Students.ToList());
-    }
+        var students = _context.Students
+            .Include(s => s.Section) 
+            .Select(s => new
+            {
+                id = s.Id,
+                studentId = s.StudentId,
+                name = s.Name,
+                section = s.Section != null ? s.Section.Name : "N/A",
+                sectionId = s.SectionId,
+                parentPhone = s.ParentPhone
+            })
+            .ToList();
 
-    [HttpPut("student/{id}")]
-    public IActionResult UpdateStudent(int id, [FromBody] CreateStudentDto dto)
-    {
-        var student = _context.Students.Find(id);
-
-        if (student == null)
-            return NotFound("Student not found");
-
-        student.Name = dto.Name;
-        student.StudentId = dto.StudentId;
-        student.SectionId = dto.SectionId;
-        student.ParentPhone = dto.ParentPhone;
-
-        _context.SaveChanges();
-
-        return Ok(new { message = "Student updated successfully" });
+        return Ok(students);
     }
 
     [HttpDelete("student/{id}")]
@@ -368,5 +412,22 @@ public class AdminController : ControllerBase
         _context.SaveChanges();
 
         return Ok(new { message = "Student deleted successfully" });
+    }
+    [HttpPut("student/{id}")]
+    public IActionResult UpdateStudent(int id, [FromBody] CreateStudentDto dto)
+    {
+        var student = _context.Students.Find(id);
+
+        if (student == null)
+            return NotFound("Student not found");
+
+        student.StudentId = dto.StudentId;
+        student.Name = dto.Name;
+        student.SectionId = dto.SectionId;
+        student.ParentPhone = dto.ParentPhone;
+
+        _context.SaveChanges();
+
+        return Ok(new { message = "Student updated successfully" });
     }
 }

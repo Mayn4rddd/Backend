@@ -10,7 +10,8 @@ public class QrSession
 
     public int SubjectId { get; set; }   
 
-    public DateTime StartTime { get; set; }   
+    public DateTime StartTime { get; set; }
+    public DateTime ScheduleEndTime { get; set; }
 
     public int AttendanceSessionId { get; set; }
 

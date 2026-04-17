@@ -17,6 +17,22 @@
   },
   {
     "ContainingType": "backend.Controllers.AdminController",
+    "Method": "CreateAdmin",
+    "RelativePath": "api/admin/create-admin",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "backend.DTOs.CreateUserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AdminController",
     "Method": "CreateSection",
     "RelativePath": "api/admin/create-section",
     "HttpMethod": "POST",
@@ -112,6 +128,22 @@
   },
   {
     "ContainingType": "backend.Controllers.AdminController",
+    "Method": "DeleteStudent",
+    "RelativePath": "api/admin/student/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AdminController",
     "Method": "UpdateStudent",
     "RelativePath": "api/admin/student/{id}",
     "HttpMethod": "PUT",
@@ -126,22 +158,6 @@
       {
         "Name": "dto",
         "Type": "backend.DTOs.CreateStudentDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "backend.Controllers.AdminController",
-    "Method": "DeleteStudent",
-    "RelativePath": "api/admin/student/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -354,6 +370,32 @@
   },
   {
     "ContainingType": "backend.Controllers.QrController",
+    "Method": "GetActiveQr",
+    "RelativePath": "api/qr/active",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sectionId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "subjectId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "teacherId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.QrController",
     "Method": "GenerateQR",
     "RelativePath": "api/qr/generate",
     "HttpMethod": "POST",
@@ -470,6 +512,16 @@
         "Name": "sectionId",
         "Type": "System.Int32",
         "IsRequired": false
+      },
+      {
+        "Name": "subjectId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "teacherId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -484,6 +536,16 @@
     "Parameters": [
       {
         "Name": "sectionId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "subjectId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "teacherId",
         "Type": "System.Int32",
         "IsRequired": false
       }
@@ -557,6 +619,11 @@
       },
       {
         "Name": "sectionId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "subjectId",
         "Type": "System.Int32",
         "IsRequired": false
       }

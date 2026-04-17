@@ -27,6 +27,10 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(a => a.StudentDbId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Attendance>()
+    .HasIndex(a => new { a.StudentDbId, a.AttendanceSessionId })
+    .IsUnique();
     }
 
 

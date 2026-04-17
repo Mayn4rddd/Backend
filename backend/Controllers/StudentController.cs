@@ -1,4 +1,5 @@
 ﻿using backend.Enums;
+using backend.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using backend.DTOs;
@@ -58,7 +59,7 @@ public class StudentController : ControllerBase
         if (user == null)
             return NotFound("User not found");
 
-        user.Password = dto.NewPassword;
+        user.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword); ;
 
         _context.SaveChanges();
 
@@ -85,7 +86,7 @@ public class StudentController : ControllerBase
         {
             Name = student.Name,
             Username = dto.Username,
-            Password = dto.Password,
+            Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             Role = "Student"
         };
 

@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using backend.DTOs;
+﻿using backend.DTOs;
+using backend.Helpers;
 using backend.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
 
@@ -23,7 +24,7 @@ public class AttendanceSessionController : ControllerBase
             SectionId = dto.SectionId,
             SubjectId = dto.SubjectId,
             TeacherId = dto.TeacherId,
-            StartTime = DateTime.UtcNow,
+            StartTime = TimeHelper.GetPhilippineTime(),
             Mode = dto.Mode 
         };
 

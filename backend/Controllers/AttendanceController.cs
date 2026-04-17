@@ -1,7 +1,9 @@
 ﻿using backend.DTOs;
 using backend.Enums;
+using backend.Helpers;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
@@ -21,21 +23,49 @@ public class AttendanceController : ControllerBase
     [HttpPost("manual")]
     public IActionResult ManualAttendance([FromBody] ManualAttendanceDto dto)
     {
+        var now = TimeHelper.GetPhilippineTime();
+
         var student = _context.Students
             .FirstOrDefault(s => s.Id == dto.StudentId);
 
         if (student == null)
             return BadRequest("Student not found");
 
-        var today = DateTime.UtcNow.Date;
+        // 1. Get assignment
+        var assignment = _context.TeacherAssignments.FirstOrDefault(x =>
+            x.TeacherId == dto.TeacherId &&
+            x.SectionId == dto.SectionId &&
+            x.SubjectId == dto.SubjectId
+        );
 
+        if (assignment == null)
+            return BadRequest("Invalid assignment");
+
+        // 2. Get schedule
+        var schedule = _context.TeacherSchedules
+            .FirstOrDefault(s =>
+                s.TeacherAssignmentId == assignment.Id &&
+                s.Day == now.DayOfWeek.ToString()
+            );
+
+        if (schedule == null)
+            return BadRequest("No schedule today");
+
+        var startTime = TimeSpan.Parse(schedule.StartTime);
+        var endTime = TimeSpan.Parse(schedule.EndTime);
+        var scheduleEnd = now.Date.Add(endTime);
+
+        // 3. Block if class ended
+        if (now > scheduleEnd)
+            return BadRequest("Class time is over");
+
+        // 🔥 4. GET ANY SESSION (QR OR MANUAL)
         var session = _context.AttendanceSessions
             .FirstOrDefault(s =>
                 s.SectionId == dto.SectionId &&
                 s.SubjectId == dto.SubjectId &&
                 s.TeacherId == dto.TeacherId &&
-                s.Mode == "Manual" &&
-                s.StartTime.Date == today
+                s.StartTime.Date == now.Date
             );
 
         if (session == null)
@@ -45,7 +75,7 @@ public class AttendanceController : ControllerBase
                 SectionId = dto.SectionId,
                 SubjectId = dto.SubjectId,
                 TeacherId = dto.TeacherId,
-                StartTime = DateTime.UtcNow,
+                StartTime = now,
                 Mode = "Manual"
             };
 
@@ -53,21 +83,39 @@ public class AttendanceController : ControllerBase
             _context.SaveChanges();
         }
 
-        var alreadyMarked = _context.Attendance.Any(a =>
-            a.StudentDbId == student.Id &&
-            a.AttendanceSessionId == session.Id
-        );
+        // 🔥 5. CHECK IF ALREADY MARKED (QR OR MANUAL)
+        var existingAttendance = _context.Attendance
+            .FirstOrDefault(a =>
+                a.StudentDbId == student.Id &&
+                a.AttendanceSessionId == session.Id
+            );
 
-        if (alreadyMarked)
-            return BadRequest("Student already marked for today");
+        if (existingAttendance != null)
+        {
+            if (existingAttendance.QrSessionId != null)
+            {
+                return BadRequest("Student already scanned via QR");
+            }
+            else
+            {
+                return BadRequest("Student already marked manually");
+            }
+        }
 
+        // 6. Validate status
+        var validStatuses = new[] { "Present", "Late", "Absent" };
+
+        if (!validStatuses.Contains(dto.Status))
+            return BadRequest("Invalid status");
+
+        // 7. Save attendance
         var attendance = new Attendance
         {
             StudentDbId = student.Id,
             SectionId = dto.SectionId,
             SubjectId = dto.SubjectId,
             TeacherId = dto.TeacherId,
-            Timestamp = DateTime.UtcNow,
+            Timestamp = now,
             Status = dto.Status,
             AttendanceSessionId = session.Id
         };
@@ -79,26 +127,22 @@ public class AttendanceController : ControllerBase
         {
             message = "Manual attendance recorded",
             studentName = student.Name,
-            status = dto.Status,
-            date = attendance.Timestamp.ToString("yyyy-MM-dd")
+            status = dto.Status
         });
     }
-
     [HttpPost("scan")]
     public IActionResult Scan([FromBody] ScanDto dto)
     {
-        var token = dto.Token;
-
-        var now = DateTime.UtcNow;
+        var now = TimeHelper.GetPhilippineTime();
 
         var session = _context.QrSessions
-            .FirstOrDefault(s => s.Token == token);
+            .FirstOrDefault(s => s.Token == dto.Token);
 
         if (session == null)
-            return BadRequest("Invalid session");
+            return BadRequest("Invalid QR session");
 
-        if (session.Expiry < now)
-            return BadRequest("Session expired");
+        if (now > session.ScheduleEndTime)
+            return BadRequest("Class time is over. QR is no longer valid.");
 
         var student = _context.Students
             .FirstOrDefault(s => s.StudentId == dto.StudentId);
@@ -106,19 +150,29 @@ public class AttendanceController : ControllerBase
         if (student == null)
             return BadRequest("Student not found");
 
-        var exists = _context.Attendance.Any(a =>
+        if (student.SectionId != session.SectionId)
+        {
+            return BadRequest("Invalid section for this QR");
+        }
+
+        var alreadyExists = _context.Attendance.Any(a =>
             a.StudentDbId == student.Id &&
             a.AttendanceSessionId == session.AttendanceSessionId
         );
 
-        if (exists)
+        if (alreadyExists)
             return BadRequest("Already scanned for this session");
 
-        var lateThreshold = session.StartTime.AddMinutes(10);
+        string status;
 
-        string status = now > lateThreshold
-            ? AttendanceStatus.Late
-            : AttendanceStatus.Present;
+        if (now <= session.Expiry)
+        {
+            status = AttendanceStatus.Present;
+        }
+        else
+        {
+            status = AttendanceStatus.Late;
+        }
 
         var attendance = new Attendance
         {
@@ -132,8 +186,15 @@ public class AttendanceController : ControllerBase
             AttendanceSessionId = session.AttendanceSessionId
         };
 
-        _context.Attendance.Add(attendance);
-        _context.SaveChanges();
+        try
+        {
+            _context.Attendance.Add(attendance);
+            _context.SaveChanges();
+        }
+        catch (DbUpdateException)
+        {
+            return BadRequest("Already scanned for this session");
+        }
 
         return Ok(new
         {
